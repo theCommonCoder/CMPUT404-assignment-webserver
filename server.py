@@ -108,7 +108,11 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 response = self.get_file_contents(self.path, response)
 
         elif self.path.is_file():
-            response = self.get_file_contents(self.path, response)
+            if self.path.suffix not in [".html", ".css"]:
+                response = self.NOT_FOUND
+            else:
+                response = self.get_file_contents(self.path, response)
+
         return response
 
     def get_file_contents(self, path: pathlib.Path, response):

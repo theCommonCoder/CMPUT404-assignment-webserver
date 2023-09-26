@@ -1,15 +1,12 @@
 CMPUT404-assignment-webserver
 =============================
+A simple webserver.
 
-https://vegibit.com/create-simple-web-services-with-the-python-http-server-and-socketserver-modules/#how-to-create-a-basic-http-server
-https://stackoverflow.com/questions/39090366/how-to-parse-raw-http-request-in-python-3
+External sources consulted:
+* https://vegibit.com/create-simple-web-services-with-the-python-http-server-and-socketserver-modules/#how-to-create-a-basic-http-server
+* https://stackoverflow.com/questions/39090366/how-to-parse-raw-http-request-in-python-3
+* https://docs.python.org/3/library/socketserver.html#examples
 
-
-CMPUT404-assignment-webserver
-
-See requirements.org (plain-text) for a description of the project.
-
-Make a simple webserver.
 
 Contributors / Licensing
 ========================

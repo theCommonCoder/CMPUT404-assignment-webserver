@@ -57,28 +57,24 @@ class MyWebServer(socketserver.BaseRequestHandler):
         return self.fields[key]
 
     def parse_request(self, data: bytes) -> None:
-        # print(f"{data = }")
         temp = data.decode("utf8").split(self.NL)
+
         self.method = temp[0].split()[0]
         self.path_str = temp[0].split()[1]
         self.path = pathlib.Path(self.webroot + self.path_str)
         self.set_fields(temp[1:])
-        # print(f"{self.method = }")
-        # print(f"{self.path_str = }")
-        # print(f"{self.path = }")
-        # print(f"{self.fields = }")
 
     def validate_path(self) -> bool:
         webroot = pathlib.Path("www")
         path = pathlib.Path(str(webroot) + self.path_str)
         rel_path = path.relative_to(webroot)
-        # print(f"{rel_path = }")
+
         if ".." in str(rel_path):
             return False
         return path.exists()
 
     def add_header(self, name: str, value: str) -> str:
-        return f"{name}: {value}" + self.NL * 2
+        return f"{name}: {value}" + self.NL
 
     def handle(self):
         # -- From documentation - https://docs.python.org/3/library/socketserver.html#examples --
@@ -95,9 +91,8 @@ class MyWebServer(socketserver.BaseRequestHandler):
         else:
             response += self.valid_path_response()
 
-        # print(f"{response = }")
-        # print("-" * 10)
         self.request.sendall(bytearray(response, "utf-8"))
+        self.request.close()
 
     def valid_path_response(self):
         response = ""
@@ -119,24 +114,17 @@ class MyWebServer(socketserver.BaseRequestHandler):
     def get_file_contents(self, path: pathlib.Path, response):
         try:
             f = open(path, "r")
-            response += "200 OK" + self.NL
-            response += self.add_header("Content-Type", f"text/{path.suffix[1:]}")
-            response += f.read()
-            response += self.NL * 2
+            contents = f.read()
             f.close()
-        except:
+        except OSError:
             response += self.NOT_FOUND
+            return response
+        response += "200 OK" + self.NL
+        response += self.add_header("Content-Type", f"text/{path.suffix[1:]}")
+        response += self.add_header("Content-Length", str(len(contents.encode("utf8"))))
+        response += self.NL + contents
+        # response += self.NL * 2
         return response
-
-    # def handle(self):
-    #     self.
-    #     self.data = self.request.recv(1024).strip()
-    #     lines = decode(self.data)[0].split('{self.NL}')
-    #     if !lines[0].startswith("GET "):
-    #
-    #     print("Got a request of: %s\n" % self.data)
-    #     self.request.sendall(bytearray())
-    #     self.request.sendall(bytearray("OK", "utf-8"))
 
 
 if __name__ == "__main__":
